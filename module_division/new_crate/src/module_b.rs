@@ -1,2 +1,2 @@
-mod module_c;
+pub mod module_c;
 mod module_d;
