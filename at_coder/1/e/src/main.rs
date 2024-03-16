@@ -60,14 +60,12 @@ impl Member {
 
     fn follow_all_followees_of_followees(&mut self) {
         let member = unsafe {(self as *mut Self).as_mut().unwrap()};
-        for i in 0..self.followees.len() {
-            unsafe {
-                let followee = self.followees.get_mut(i).unwrap().as_mut().unwrap();
-                followee.followees.iter().for_each(|f| {
-                    member.follow(f.as_mut().unwrap());
-                });
-            }
-        }
+        let followees = self.followees.to_vec();
+        followees.into_iter().for_each(|followee| unsafe {
+            followee.as_mut().unwrap().followees.iter().for_each(|f| {
+                member.follow(f.as_mut().unwrap());
+            });
+        });
     }
 
     fn follow_all_followers_of(&mut self, member: &Member) {
